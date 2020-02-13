@@ -2,40 +2,47 @@ import React from 'react';
 import './App.css';
 import store from './store';
 import TracksData from './TracksData';
-
+import axios from 'axios';
 
 class App extends React.Component{
     constructor(props){
         super(props)
-        this.fn=this.fn.bind(this)
     }
     state = {
-        tracksData: [],
-        number: 100
+        tracksData: []
     }
     componentDidMount() {
-        fetch('http://localhost:3000/all_tracks')
-        //fetch('http://jsonplaceholder.typicode.com/users')
-            .then(res => res.json())
-            .then((data) => {
-                this.setState({ tracksData: data })
-                console.log("hello world!!!!!")
+        console.log("helloworld");
+        axios.get(`http://localhost:3000/all_tracks`)
+        //axios.get(`https://jsonplaceholder.typicode.com/users`)
+            .then(res => {
+               this.setState({ tracksData: res.data });
+
+                console.log(res);
+                console.log(res.data);
             })
-            .catch(console.log)
+
+            // .then(res =>{
+            //     console.log(res);
+            //     return res.json();
+            // })
+            // .then((data) => {
+            //     this.setState({ tracksData: data });
+            //     console.log("hello world!!!!!");
+            // })
+            // .catch(console.log)
     }
     render(){
         return(
             <div>
             <div>
-                <div>{store.getState()}</div>
-            </div>
-            <div>
                     <TracksData tracksData={this.state.tracksData} />
             </div>
+                <div>
+                    <div>this is state:{store.getState()}</div>
+                </div>
             </div>
         )
-    }
-    fn(){
     }
 }
 

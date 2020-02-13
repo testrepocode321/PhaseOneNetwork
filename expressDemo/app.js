@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var cors = require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -11,6 +11,7 @@ var app = express();
 
 const fs = require('fs');
 
+app.use(cors());
 //load data from json file
 let data = fs.readFileSync('tracks.json');
 data = JSON.parse(data);
@@ -22,24 +23,20 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 app.get('/all_tracks', function (req, res) {
-  res.header("Content-Type",'application/json');
-  res.send(JSON.stringify(data, null, 4));
+  return res.status(200).send(JSON.stringify(data, null, 2));
 });
 
 app.post('/track', function (req, res) {
   for(let element in data){
     if(req.body.id == data[element].id){
-
-      return res.status(200).send({
-        message: data[element]
-      });
+      return res.status(200).send(JSON.stringify(data[element], null, 2));
     }
     console.log(data[element].id);
   }
   return res.status(400).send({
     message: 'id does not exist!'
   });
-  res.send('no problem');s
+  res.send('no problem');
 });
 
 
